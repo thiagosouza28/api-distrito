@@ -1,0 +1,40 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Participant {
+  id                         String   @id @map("_id") @default(auto()) @db.ObjectId
+  fullName                   String
+  birthDate                  DateTime
+  age                        Int
+  cpf                        String   @unique
+  district                   String
+  church                     String
+  createdByUserId           String   // Altere para o tipo adequado
+  paymentConfirmed           Boolean  @default(false)
+  paymentConfirmationDate    DateTime?
+  confirmedByUserId         String?  // Alterado para ser opcional
+}
+
+model User {
+  id         String   @id @map("_id") @default(auto()) @db.ObjectId
+  fullName   String
+  email      String   @unique // E-mail deve ser único
+  birthDate  DateTime
+  cpf        String   @unique // CPF deve ser único
+  district   String
+  church     String
+  password   String   // Senha do usuário
+  role       String   // Role do usuário (ex: 'diretorjovem', 'administrador')
+  createdAt  DateTime @default(now()) // Data de criação
+  updatedAt  DateTime @updatedAt // Data da última atualização
+}
+
+
+
+
