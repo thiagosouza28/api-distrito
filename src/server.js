@@ -1,8 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const participantRoutes = require('./Routes/participantRoutes');
-const userRoutes = require('./Routes/userRoutes'); // Certifique-se de que isso está correto
-const { connectToDatabase, disconnectFromDatabase } = require('./database/database.js'); // Importa funções de conexão
+const participantRoutes = require('./Routes/participantRoutes'); // Rotas de participantes
+const userRoutes = require('./Routes/userRoutes'); // Rotas de usuários
+const { connectToDatabase, disconnectFromDatabase } = require('./database/database.js'); // Funções de conexão
 
 dotenv.config(); // Carrega as variáveis do .env
 
@@ -18,10 +18,15 @@ app.use('/api/users', userRoutes); // Registrar o router de usuários
 
 // Função para iniciar o servidor
 const startServer = async () => {
-    await connectToDatabase(); // Conecta ao banco de dados
-    app.listen(port, () => {
-        console.log(`Server running at http://localhost:${port}`); // Log do servidor
-    });
+    try {
+        await connectToDatabase(); // Conecta ao banco de dados
+        app.listen(port, () => {
+            console.log(`Server running at http://localhost:${port}`); // Log do servidor
+        });
+    } catch (error) {
+        console.error('Error connecting to the database', error);
+        process.exit(1); // Encerra o processo em caso de falha na conexão
+    }
 };
 
 // Desconectar do banco de dados ao encerrar o processo
